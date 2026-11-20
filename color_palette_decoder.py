@@ -2,7 +2,7 @@
 Color Palette Decoder: find the dominant colours of any image.
 
 Instead of uploading an image to an online palette generator, run this locally.
-The image is downscaled, quantised with median-cut so that near-identical shades
+The image is downscaled, quantised with Pillow's fast octree algorithm so that near-identical shades
 merge into one colour, and the resulting colours are ranked by how much of the
 image they cover.
 
@@ -44,7 +44,7 @@ def extract_palette(image, n_colors=6):
     if n_colors < 1:
         raise ValueError("n_colors must be at least 1")
     rgb = _prepare(image)
-    quantized = rgb.quantize(colors=n_colors, method=Image.Quantize.MEDIANCUT)
+    quantized = rgb.quantize(colors=n_colors, method=Image.Quantize.FASTOCTREE)
     lut = quantized.getpalette()
     counts = quantized.getcolors(maxcolors=256)
     total = sum(c for c, _ in counts)
